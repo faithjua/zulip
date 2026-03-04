@@ -1165,6 +1165,17 @@ export class BuddyList extends BuddyListConf {
 
         $scroll_container.on("scroll", () => {
             this.fill_screen_with_content();
+
+            const scroll_container_rect = $scroll_container[0]!.getBoundingClientRect();
+            const has_scrolled_down = $scroll_container.scrollTop()! > 0;
+
+            $(".buddy-list-subsection-header").each(function () {
+                const rect = this.getBoundingClientRect();
+                $(this).toggleClass(
+                    "sidebar-header-drop-shadow",
+                    rect.top <= scroll_container_rect.top && has_scrolled_down,
+                );
+            });
         });
     }
 

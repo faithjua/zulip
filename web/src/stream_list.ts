@@ -1454,6 +1454,27 @@ export function set_event_handlers({
     scroll_util.get_scroll_element($("#left_sidebar_scroll_container")).on("scroll", () => {
         has_scrolled = true;
         toggle_pm_header_icon();
+
+        const $scroll_container = $("#left_sidebar_scroll_container");
+        const scroll_container_rect = $scroll_container[0]!.getBoundingClientRect();
+        const has_scrolled_down = $scroll_container.scrollTop()! > 0;
+
+        const $dm_header = $("#direct-messages-section-header");
+        if ($dm_header.length > 0) {
+            const dm_rect = $dm_header[0]!.getBoundingClientRect();
+            $dm_header.toggleClass(
+                "sidebar-header-drop-shadow",
+                dm_rect.top <= scroll_container_rect.top && has_scrolled_down,
+            );
+        }
+
+        $(".stream-list-subsection-header").each(function () {
+            const rect = this.getBoundingClientRect();
+            $(this).toggleClass(
+                "sidebar-header-drop-shadow",
+                rect.top <= scroll_container_rect.top && has_scrolled_down,
+            );
+        });
     });
 
     $("#streams_list").on(
