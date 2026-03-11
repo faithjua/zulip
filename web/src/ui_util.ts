@@ -356,3 +356,16 @@ export function disable_left_sidebar_search(): void {
 export function enable_left_sidebar_search(): void {
     $("#left-sidebar-search").toggleClass("no-display", false);
 }
+
+export function update_sticky_header_shadow($sticky_headers: JQuery, $scroll_container: JQuery): void {
+    const scroll_container_rect = $scroll_container[0]!.getBoundingClientRect();
+    const has_scrolled_down = $scroll_container.scrollTop()! > 0;
+
+    for (const header of $sticky_headers) {
+        const header_rect = header.getBoundingClientRect();
+        $(header).toggleClass(
+            "sidebar-header-drop-shadow",
+            header_rect.top <= scroll_container_rect.top && has_scrolled_down,
+        );
+    }
+}

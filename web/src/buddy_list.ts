@@ -1165,6 +1165,10 @@ export class BuddyList extends BuddyListConf {
 
         $scroll_container.on("scroll", () => {
             this.fill_screen_with_content();
+            if (ui_util.update_sticky_header_shadow) {
+                const $sticky_headers = $scroll_container.find(".buddy-list-subsection-header");
+                ui_util.update_sticky_header_shadow($sticky_headers, $scroll_container);
+            }
         });
     }
 

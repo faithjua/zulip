@@ -16,34 +16,34 @@ import * as blueslip from "./blueslip.ts";
 import * as browser_history from "./browser_history.ts";
 import * as channel_folders from "./channel_folders.ts";
 import * as compose_actions from "./compose_actions.ts";
-import type {Filter} from "./filter.ts";
+import type { Filter } from "./filter.ts";
 import * as hash_util from "./hash_util.ts";
-import {$t} from "./i18n.ts";
+import { $t } from "./i18n.ts";
 import * as left_sidebar_navigation_area from "./left_sidebar_navigation_area.ts";
-import {localstorage} from "./localstorage.ts";
+import { localstorage } from "./localstorage.ts";
 import * as mouse_drag from "./mouse_drag.ts";
 import * as narrow_state from "./narrow_state.ts";
-import {page_params} from "./page_params.ts";
+import { page_params } from "./page_params.ts";
 import * as pm_list from "./pm_list.ts";
 import * as popovers from "./popovers.ts";
 import * as scroll_util from "./scroll_util.ts";
-import {web_channel_default_view_values} from "./settings_config.ts";
+import { web_channel_default_view_values } from "./settings_config.ts";
 import * as settings_data from "./settings_data.ts";
-import {realm} from "./state_data.ts";
+import { realm } from "./state_data.ts";
 import * as stream_data from "./stream_data.ts";
 import * as stream_list_sort from "./stream_list_sort.ts";
-import type {StreamListSection} from "./stream_list_sort.ts";
+import type { StreamListSection } from "./stream_list_sort.ts";
 import * as stream_topic_history from "./stream_topic_history.ts";
 import * as stream_topic_history_util from "./stream_topic_history_util.ts";
 import * as sub_store from "./sub_store.ts";
-import type {StreamSubscription} from "./sub_store.ts";
-import {LONG_HOVER_DELAY} from "./tippyjs.ts";
+import type { StreamSubscription } from "./sub_store.ts";
+import { LONG_HOVER_DELAY } from "./tippyjs.ts";
 import * as topic_list from "./topic_list.ts";
 import * as topic_list_data from "./topic_list_data.ts";
 import * as ui_util from "./ui_util.ts";
 import * as unread from "./unread.ts";
-import type {FullUnreadCountsData, StreamCountInfo} from "./unread.ts";
-import {user_settings} from "./user_settings.ts";
+import type { FullUnreadCountsData, StreamCountInfo } from "./unread.ts";
+import { user_settings } from "./user_settings.ts";
 
 let pending_stream_list_rerender = false;
 let zoomed_in = false;
@@ -384,18 +384,18 @@ export function build_stream_list(force_rerender: boolean): void {
             let button_text;
             if (section.muted_streams.length > 0 && section.inactive_streams.length > 0) {
                 button_text = $t(
-                    {defaultMessage: "{count} INACTIVE OR MUTED"},
-                    {count: muted_and_inactive_streams.length},
+                    { defaultMessage: "{count} INACTIVE OR MUTED" },
+                    { count: muted_and_inactive_streams.length },
                 );
             } else if (section.muted_streams.length > 0) {
                 button_text = $t(
-                    {defaultMessage: "{count} MUTED"},
-                    {count: section.muted_streams.length},
+                    { defaultMessage: "{count} MUTED" },
+                    { count: section.muted_streams.length },
                 );
             } else {
                 button_text = $t(
-                    {defaultMessage: "{count} INACTIVE"},
-                    {count: section.inactive_streams.length},
+                    { defaultMessage: "{count} INACTIVE" },
+                    { count: section.inactive_streams.length },
                 );
             }
             $(`#stream-list-${section.id}`).append(
@@ -611,12 +611,12 @@ export function get_stream_li(stream_id: number): JQuery | undefined {
 
     const $li = row.get_li();
     if ($li.length === 0) {
-        blueslip.error("Cannot find li", {stream_id});
+        blueslip.error("Cannot find li", { stream_id });
         return undefined;
     }
 
     if ($li.length > 1) {
-        blueslip.error("stream_li has too many elements", {stream_id});
+        blueslip.error("stream_li has too many elements", { stream_id });
         return undefined;
     }
 
@@ -682,7 +682,7 @@ export function zoom_out_topics(): void {
 export function set_in_home_view(stream_id: number, in_home: boolean): void {
     const $li = get_stream_li(stream_id);
     if (!$li) {
-        blueslip.error("passed in bad stream id", {stream_id});
+        blueslip.error("passed in bad stream id", { stream_id });
         return;
     }
 
@@ -775,7 +775,7 @@ function build_stream_sidebar_row(sub: StreamSubscription): void {
 export function create_sidebar_row(sub: StreamSubscription, force_rerender = false): void {
     if (!force_rerender && stream_sidebar.has_row_for(sub.stream_id)) {
         // already exists
-        blueslip.warn("Dup try to build sidebar row for stream", {stream_id: sub.stream_id});
+        blueslip.warn("Dup try to build sidebar row for stream", { stream_id: sub.stream_id });
         return;
     }
     build_stream_sidebar_row(sub);
@@ -988,9 +988,9 @@ export let update_dom_with_unread_counts = function (counts: FullUnreadCountsDat
     update_section_unread_count(
         $("#stream-list-normal-streams-container .show-inactive-or-muted-channels"),
         normal_section_unread_counts.inactive_unmuted +
-            normal_section_unread_counts.muted_channel_unmuted,
+        normal_section_unread_counts.muted_channel_unmuted,
         normal_section_unread_counts.inactive_muted +
-            normal_section_unread_counts.muted_channel_muted,
+        normal_section_unread_counts.muted_channel_muted,
     );
 
     if (user_settings.web_left_sidebar_show_channel_folders) {
@@ -1054,7 +1054,7 @@ export function refresh_pinned_or_unpinned_stream(sub: StreamSubscription): void
     // our sight.
     if (sub.pin_to_top) {
         if (!stream_sidebar.get_row(sub.stream_id)) {
-            blueslip.error("passed in bad stream id", {stream_id: sub.stream_id});
+            blueslip.error("passed in bad stream id", { stream_id: sub.stream_id });
             return;
         }
         scroll_stream_into_view();
@@ -1129,7 +1129,7 @@ export function update_stream_sidebar_for_narrow(filter: Filter): JQuery | undef
         // corresponding to that stream in our sidebar.  This error
         // stopped appearing from March 2018 until at least
         // April 2020, so if it appears again, something regressed.
-        blueslip.error("No stream_li for subscribed stream", {stream_id});
+        blueslip.error("No stream_li for subscribed stream", { stream_id });
         clear_topics();
         return undefined;
     }
@@ -1212,7 +1212,7 @@ export function initialize({
     save_collapsed_sections_state();
     update_subscribe_to_more_streams_link();
     initialize_tippy_tooltips();
-    set_event_handlers({show_channel_feed});
+    set_event_handlers({ show_channel_feed });
 
     $("#stream_filters").on("click", ".show-more-topics", (e) => {
         zoom_in();
@@ -1221,7 +1221,7 @@ export function initialize({
         // to only happen when the user clicks on the "SHOW ALL TOPICS"
         // button, and not interfere with the narrow change handling.
         $("#topic_filter_query").trigger("focus");
-        browser_history.update_current_history_state_data({show_more_topics: true});
+        browser_history.update_current_history_state_data({ show_more_topics: true });
 
         e.preventDefault();
         e.stopPropagation();
@@ -1229,7 +1229,7 @@ export function initialize({
 
     $(".show-all-streams").on("click", (e) => {
         zoom_out();
-        browser_history.update_current_history_state_data({show_more_topics: false});
+        browser_history.update_current_history_state_data({ show_more_topics: false });
 
         e.preventDefault();
         e.stopPropagation();
@@ -1454,6 +1454,14 @@ export function set_event_handlers({
     scroll_util.get_scroll_element($("#left_sidebar_scroll_container")).on("scroll", () => {
         has_scrolled = true;
         toggle_pm_header_icon();
+
+        const $scroll_container = $("#left_sidebar_scroll_container");
+        if (ui_util.update_sticky_header_shadow) {
+            const $sticky_headers = $scroll_container.find(
+                "#direct-messages-section-header, .stream-list-subsection-header",
+            );
+            ui_util.update_sticky_header_shadow($sticky_headers, $scroll_container);
+        }
     });
 
     $("#streams_list").on(
@@ -1612,7 +1620,7 @@ export function get_sorted_channel_ids_for_next_unread_navigation(): {
         is_collapsed: collapsed_sections.has(section.id),
     }));
 
-    function score(section: {id: string; is_collapsed: boolean}): number {
+    function score(section: { id: string; is_collapsed: boolean }): number {
         // Prioritize uncollapsed sections over collapsed sections.
         if (!section.is_collapsed) {
             return 1;
